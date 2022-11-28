@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "adept-augmentations"
+version = "0.1.0"
+description = "A Python library aimed at dissecting and augmenting NLP training data."
+authors = ["david <david.m.berenstein@gmail.com>"]
+license = "Apache"
+readme = "README.md"
+packages = [{include = "adept_augmentations"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+spacy = "^3.4.3"
+datasets = "^2.7.1"
+pydantic = "^1.10.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.0"
+jupyter = "^1.0.0"
+pre-commit = "^2.20.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
