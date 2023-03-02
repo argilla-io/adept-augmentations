@@ -1,4 +1,5 @@
 # adept-augmentations
+
 A Python library aimed at dissecting and augmenting NLP training data.
 
 IMO, we can separate the idea in 3 components:
@@ -9,13 +10,12 @@ IMO, we can separate the idea in 3 components:
 
 # TO-DO
 
-[] simple POC of efficiency NER replacement via `augmenty`
-    - create NER(word,tag) KB from n=[2,4,8,16,32] samples from arbitrary datasets
-    - use `augmenty.entity_augmenter` with KB to create additional data with `level=1`, i.e., 100% replacement
-    - check the impact in size for n=[2,4,8,16,32] -> m=[?,?,?,?,?]
-    - log data into `argilla` and easily evaluate with `autotrain`
-    -
-[] basic Analyzer for IOB2 tags [https://huggingface.co/datasets/conll2003]
+- [] simple POC of efficiency NER replacement via `augmenty`
+  - create NER(word,tag) KB from n=[2,4,8,16,32] samples from arbitrary datasets
+  - use `augmenty.entity_augmenter` with KB to create additional data with `level=1`, i.e., 100% replacement
+  - check the impact in size for n=[2,4,8,16,32] -> m=[?,?,?,?,?]
+  - log data into `argilla` and easily evaluate with `autotrain`
+- [] basic Analyzer for IOB2 tags [https://huggingface.co/datasets/conll2003]
 
 # Components
 
@@ -25,12 +25,12 @@ We should define a set of analyzers that are built on top of a `AnalyzerBase`, w
 
 ### Sub-analyzers
 
-[] `AnalyzerBase`
-    [] `AnalyzerIOB`
-    [] `AnalyzerIOB2`
-    [] `AnalyzerBIO`
-    [] `AnalyzerCharSpan`
-    [] `AnalyzerTokenSpan`
+- [] `AnalyzerBase`
+- [] `AnalyzerIOB`
+- [] `AnalyzerIOB2`
+- [] `AnalyzerBIO`
+- [] `AnalyzerCharSpan`
+- [] `AnalyzerTokenSpan`
 
 ## Augmenter
 
@@ -38,20 +38,21 @@ We should define a set of augmentation recipes for each type of structural chang
 
 ### Sub-augmenters
 
-[] `AugmenterBase`
-    [] `AugmenterNER`
-    [] `AugmenterPOS`
-    [] `AugmenterDEP`
-    [] `AugmenterCOREF`
+- [] `AugmenterBase`
+- [] `AugmenterNER`
+- [] `AugmenterPOS`
+- [] `AugmenterDEP`
+- [] `AugmenterCOREF`
 
 ### integrations
 
 Potentially, we can look into integrations of other augmentations packages that do not preserve gold standard knowledge. For me, `augmenty` works nicely, but I am unsure about the value of these augmentations w.r.t. getting valuable training data with simpel word/character swaps.
 
-- https://github.com/KennethEnevoldsen/augmenty
-  - https://kennethenevoldsen.github.io/augmenty/tutorials/introduction.html
-- https://github.com/QData/TextAttack
-- https://github.com/infinitylogesh/mutate
+- <https://github.com/KennethEnevoldsen/augmenty>
+  - <https://kennethenevoldsen.github.io/augmenty/tutorials/introduction.html>
+- <https://github.com/QData/TextAttack>
+- <https://github.com/infinitylogesh/mutate>
+
 ## Reporter
 
 Lowest priority, but it could be cool to be able to visualize this using `datapane` or other reporting tools.
