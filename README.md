@@ -28,7 +28,8 @@ We should define a set of analyzers that are built on top of a `AnalyzerBase`, w
 - [] `AnalyzerBase`
 - [] `AnalyzerIOB`
 - [] `AnalyzerIOB2`
-- [] `AnalyzerBIO`
+- [] `AnalyzerBIOES`
+- [] `AnalyzerBILOU`
 - [] `AnalyzerCharSpan`
 - [] `AnalyzerTokenSpan`
 
