@@ -5,20 +5,48 @@ description = "A Python library aimed at dissecting and augmenting NLP training 
 authors = ["david <david.m.berenstein@gmail.com>"]
 license = "Apache"
 readme = "README.md"
-packages = [{include = "adept_augmentations"}]
+homepage = "https://github.com/davidberenstein1957/adept-augmentations"
+repository = "https://github.com/davidberenstein1957/adept-augmentations"
+documentation = "https://github.com/davidberenstein1957/adept-augmentations"
+keywords = ["spacy", "explainable AI", "xai", "nlu", "visualization", "datasets", "nlproc", "data-centricity", "augmentation", "data-augmentation"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development"
+]
 
 [tool.poetry.dependencies]
-python = "^3.10"
-spacy = "^3.4.3"
-datasets = "^2.7.1"
-pydantic = "^1.10.2"
+python = ">=3.8,<3.12"
+spacy = "^3"
+datasets = "^2.5"
+pydantic = "^1.8"
 
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
 jupyter = "^1.0.0"
 pre-commit = "^2.20.0"
+jupyterlab = "^3.6.1"
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = "tests"
+
+[tool.black]
+line-length = 119
+experimental-string-processing = true
+
+[tool.isort]
+profile = "black"
+src_paths = ["adept_augmentations"]
