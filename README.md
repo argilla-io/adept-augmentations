@@ -2,6 +2,25 @@
 
 A Python library aimed at dissecting and augmenting NLP training data.
 
+### Usage
+
+```python
+from datasets import load_dataset
+
+from adept_augmentations import Augmenter
+
+# dataset = load_dataset("conll2003")
+dataset = load_dataset("DFKI-SLT/few-nerd", "supervised")
+dataset = dataset.remove_columns("ner_tags")
+dataset = dataset.rename_column("fine_ner_tags", "ner_tags")
+
+augmenter = Augmenter(dataset["train"])
+aug_dataset = augmenter.augment(N=4)
+breakpoint()
+```
+
+---
+
 IMO, we can separate the idea in 3 components:
 
 1. analyze
