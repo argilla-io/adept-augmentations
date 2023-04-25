@@ -50,8 +50,6 @@ class LabelScheme(Enum):
         if not cls.are_labels_schemed(labels):
             return cls.NONE, EntityExtractorNoScheme(labels)
 
-        # Not implemented yet, as the conversion from reduced label IDs to schemed IDs isn't implemented yet.
-        raise NotImplementedError()
         tags = cls.get_scheme_tags(labels)
         if tags == set("IOB"):
             return cls.IOB2, EntityExtractorIOB(labels)
@@ -81,6 +79,7 @@ class Augmenter:
         )
 
     def augment(self, N: int = 4) -> Dataset:
+        # TODO: Rename N, perhaps to "runs"?
         # N is the number of times we reuse every sentence
         return self.dataset.map(
             self.replace_entities,
@@ -94,7 +93,10 @@ class Augmenter:
     def extract_entities(self, tokens: List[str], labels: List[int]):
         entities = list(self.entity_extractor(labels))
         for label, start, end in entities:
-            self.knowledge_base[label].add(tuple(tokens[start:end]))
+            entity = tuple(tokens[start:end])
+            # TODO: Check why sometimes the entity has length 0
+            if entity:
+                self.knowledge_base[label].add(entity)
         return {"tokens": tokens, self.label_column: labels, "entities": entities}
 
     def replace_entities(
@@ -119,7 +121,7 @@ class Augmenter:
                 #     label, start, end = random.choice(entities)
                     entity_tokens = random.choice(tuple(self.knowledge_base[label]))
                     tokens_copy[start:end] = entity_tokens
-                    labels_copy[start:end] = [label] * len(entity_tokens)
+                    labels_copy[start:end] = self.entity_extractor.reduced_label_id_to_id(label, len(entity_tokens))
                 assert len(tokens_copy) == len(labels_copy)
                 batch["tokens"].append(tokens_copy)
                 batch[self.label_column].append(labels_copy)
