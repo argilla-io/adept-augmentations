@@ -1,15 +1,21 @@
+import random
 from collections import defaultdict
 from enum import Enum, auto
-import random
-from typing import Any, Dict, List, Optional, Set, Tuple
-from datasets import Dataset
-from adept_augmentations.augmenters.constants import Entity
+from typing import List, Optional, Set, Union
 
+from datasets import Dataset
+from spacy.tokens import DocBin
+
+from adept_augmentations.augmenters.constants import Entity
 from adept_augmentations.augmenters.extractors import (
     EntityExtractorBILOU,
     EntityExtractorBIOES,
     EntityExtractorIOB,
     EntityExtractorNoScheme,
+)
+from adept_augmentations.utils import (
+    convert_dataset_to_docbin,
+    convert_docbin_to_dataset,
 )
 
 
@@ -60,8 +66,17 @@ class LabelScheme(Enum):
         raise NotImplementedError(f"The detected labeling scheme with tags {tags!r} has not been implemented.")
 
 
-class Augmenter:
-    def __init__(self, dataset: Dataset, labels: Optional[List[str]] = None, label_column: str = "ner_tags") -> None:
+
+class EntitySwapAugmenter:
+    def __init__(self, dataset: Union[Dataset, DocBin], labels: Optional[List[str]] = None, label_column: str = "ner_tags") -> None:
+        self.dataset_type = type(dataset)
+        if self.dataset_type == DocBin:
+            dataset = convert_docbin_to_dataset(dataset, labels)
+        elif self.dataset_type == Dataset:
+            pass
+        else:
+            raise TypeError("dataset must be either a `datasets.Dataset` or a `spacy.tokens.DocBin`.")
+
         self.dataset = dataset
         if labels is None:
             # TODO: This won't always work
@@ -78,17 +93,21 @@ class Augmenter:
             self.extract_entities, input_columns=["tokens", label_column], load_from_cache_file=False
         )
 
-    def augment(self, N: int = 4) -> Dataset:
+    def augment(self, N: int = 4, deduplicate: bool=True) -> Union[Dataset, DocBin]:
         # TODO: Rename N, perhaps to "runs"?
         # N is the number of times we reuse every sentence
-        return self.dataset.map(
+        augmented_dataset = self.dataset.map(
             self.replace_entities,
             input_columns=["tokens", self.label_column, "entities"],
             remove_columns=self.dataset.column_names,
             load_from_cache_file=False,
-            fn_kwargs={"N": N},
+            fn_kwargs={"N": N, "deduplicate": deduplicate},
             batched=True,
         )
+        if self.dataset_type == DocBin:
+            return convert_dataset_to_docbin(augmented_dataset)
+        else:
+            return augmented_dataset
 
     def extract_entities(self, tokens: List[str], labels: List[int]):
         entities = list(self.entity_extractor(labels))
@@ -100,14 +119,16 @@ class Augmenter:
         return {"tokens": tokens, self.label_column: labels, "entities": entities}
 
     def replace_entities(
-        self, batch_tokens: List[str], batch_labels: List[int], batch_entities: List[Entity], N: int = 4
+        self, batch_tokens: List[str], batch_labels: List[int], batch_entities: List[Entity], N: int = 4, deduplicate: bool=False
     ):
         # TODO: Convert labels correctly for IOB, etc.
         batch = {
             "tokens": [],
             self.label_column: [],
         }
+
         for tokens, labels, entities in zip(batch_tokens, batch_labels, batch_entities):
+            seen_texts = set()
             for _ in range(N):
                 tokens_copy = tokens[::]
                 labels_copy = labels[::]
@@ -123,6 +144,10 @@ class Augmenter:
                     tokens_copy[start:end] = entity_tokens
                     labels_copy[start:end] = self.entity_extractor.reduced_label_id_to_id(label, len(entity_tokens))
                 assert len(tokens_copy) == len(labels_copy)
-                batch["tokens"].append(tokens_copy)
-                batch[self.label_column].append(labels_copy)
+                tokens_copy_str = " ".join(tokens_copy)
+                if tokens_copy_str not in seen_texts:
+                    batch["tokens"].append(tokens_copy)
+                    batch[self.label_column].append(labels_copy)
+                    if deduplicate:
+                        seen_texts.add(tokens_copy_str)
         return batch

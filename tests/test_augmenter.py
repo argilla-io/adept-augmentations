@@ -1,7 +1,14 @@
 from typing import List, Optional
+
 import pytest
-from adept_augmentations import Augmenter
-from tests.constants import CONLL_LABELS, FEWNERD_COARSE_LABELS, FABNER_LABELS, BILOU_CONLL_LABELS
+
+from adept_augmentations import EntitySwapAugmenter
+from tests.constants import (
+    BILOU_CONLL_LABELS,
+    CONLL_LABELS,
+    FABNER_LABELS,
+    FEWNERD_COARSE_LABELS,
+)
 
 
 @pytest.mark.parametrize("N", (2,))
@@ -16,16 +23,17 @@ from tests.constants import CONLL_LABELS, FEWNERD_COARSE_LABELS, FABNER_LABELS, 
         ("fabner_tiny", None),
         ("bilou_conll03_tiny", BILOU_CONLL_LABELS), # <- BIOES
         ("bilou_conll03_tiny", None),
+        ("spacy_docbin", None)
     ),
 )
 def test_augmenter(N: int, dataset_fixture: str, labels: Optional[List[str]], request: pytest.FixtureRequest) -> None:
     dataset = request.getfixturevalue(dataset_fixture)
-    augmenter = Augmenter(dataset, labels=labels)
-    augmented_ds = augmenter.augment(N=N)
+    augmenter = EntitySwapAugmenter(dataset, labels=labels)
+    augmented_ds = augmenter.augment(N=N, deduplicate=False)
     assert len(augmented_ds) == len(dataset) * N
 
 
 def test_augmenter_zero(conll03_tiny) -> None:
-    augmenter = Augmenter(conll03_tiny, labels=CONLL_LABELS)
-    augmented_ds = augmenter.augment(N=0)
+    augmenter = EntitySwapAugmenter(conll03_tiny, labels=CONLL_LABELS)
+    augmented_ds = augmenter.augment(N=0, deduplicate=False)
     assert len(augmented_ds) == 0

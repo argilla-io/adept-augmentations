@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "adept-augmentations"
 version = "0.1.0"
-description = "A Python library aimed at dissecting and augmenting NLP training data."
+description = "A Python library aimed at adeptly, augmenting NLP training data."
 authors = ["david <david.m.berenstein@gmail.com>"]
 license = "Apache"
 readme = "README.md"
@@ -37,6 +37,7 @@ jupyter = "^1.0.0"
 pre-commit = "^2.20.0"
 jupyterlab = "^3.6.1"
 black = "^23.3.0"
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

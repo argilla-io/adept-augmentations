@@ -1,78 +1,77 @@
 # adept-augmentations
 
-A Python library aimed at dissecting and augmenting NLP training data.
+A Python library aimed at adeptly augmenting NLP training data.
 
-### Usage
+## Usage
 
+### Datasets
 ```python
 from datasets import load_dataset
 
-from adept_augmentations import Augmenter
+from adept_augmentations import EntitySwapAugmenter
 
-# dataset = load_dataset("conll2003")
-dataset = load_dataset("DFKI-SLT/few-nerd", "supervised")
-dataset = dataset.remove_columns("ner_tags")
-dataset = dataset.rename_column("fine_ner_tags", "ner_tags")
-
-augmenter = Augmenter(dataset["train"])
+dataset = load_dataset("conll2003", split="train[:3]"])
+augmenter = EntitySwapAugmenter(dataset)
 aug_dataset = augmenter.augment(N=4)
-breakpoint()
+
+for entry in aug_dataset:
+    print(" ".join(entry["token"]))
+
+# EU rejects German call to boycott British lamb .
+# EU rejects British call to boycott German lamb .
+# EU rejects German call to boycott German lamb .
+# Peter Blackburn
+# BRUSSELS 1996-08-22
 ```
 
----
+### spaCy
+```python
+import spacy
+from spacy.tokens import DocBin
 
-IMO, we can separate the idea in 3 components:
+from adept_augmentations import EntitySwapAugmenter
 
-1. analyze
-2. report (lowest priority)
-3. augment
+nlp = spacy.load("en_core_web_sm")
 
-# TO-DO
+# Create some example training data
+TRAIN_DATA = [
+    "Apple is looking at buying U.K. startup for $1 billion",
+    "Microsoft acquires GitHub for $7.5 billion",
+]
+docs = nlp.pipe(TRAIN_DATA)
 
-- [] simple POC of efficiency NER replacement via `augmenty`
-  - create NER(word,tag) KB from n=[2,4,8,16,32] samples from arbitrary datasets
-  - use `augmenty.entity_augmenter` with KB to create additional data with `level=1`, i.e., 100% replacement
-  - check the impact in size for n=[2,4,8,16,32] -> m=[?,?,?,?,?]
-  - log data into `argilla` and easily evaluate with `autotrain`
-- [] basic Analyzer for IOB2 tags [https://huggingface.co/datasets/conll2003]
+# Create a new DocBin
+doc_bin = DocBin(docs=docs)
 
-# Components
+doc_bin = EntitySwapAugmenter(doc_bin).augment(4)
+for doc in doc_bin.get_docs(nlp.vocab):
+    print(doc.text)
 
-## Analyzer
-
-We should define a set of analyzers that are built on top of a `AnalyzerBase`, which output an intermediary representation of the `TokenClasses` (POS, NER, CoRef) based on different labelling schemas. For me, these augmentations can either be applied to a gold standard or just inferred knowledge from a pre-trained model, e.g., POS and DEP structures.
-
-### Sub-analyzers
-
-- [] `AnalyzerBase`
-- [] `AnalyzerIOB`
-- [] `AnalyzerIOB2`
-- [] `AnalyzerBIOES`
-- [] `AnalyzerBILOU`
-- [] `AnalyzerCharSpan`
-- [] `AnalyzerTokenSpan`
+# GitHub is looking at buying U.K. startup for $ 7.5 billion
+# Microsoft is looking at buying U.K. startup for $ 1 billion
+# Microsoft is looking at buying U.K. startup for $ 7.5 billion
+# GitHub is looking at buying U.K. startup for $ 1 billion
+# Microsoft acquires Apple for $ 7.5 billion
+# Apple acquires Microsoft for $ 1 billion
+# Microsoft acquires Microsoft for $ 7.5 billion
+# GitHub acquires GitHub for $ 1 billion
+```
 
 ## Augmenter
 
-We should define a set of augmentation recipes for each type of structural changes we might want to apply, while preserving gold standard knowledge w.r.t. target tags required for training.
+We believe that we can
 
-### Sub-augmenters
+- [X] `EntitySwapAugmenter`
+- [] `KnowledgeBaseSwapAugmenter`
+- [] `CoreferenceSwapAugmenter`
+- [] `SyntaticTreeSwapAugmenter`
 
-- [] `AugmenterBase`
-- [] `AugmenterNER`
-- [] `AugmenterPOS`
-- [] `AugmenterDEP`
-- [] `AugmenterCOREF`
+## Potential integrations
 
-### integrations
-
-Potentially, we can look into integrations of other augmentations packages that do not preserve gold standard knowledge. For me, `augmenty` works nicely, but I am unsure about the value of these augmentations w.r.t. getting valuable training data with simpel word/character swaps.
+Potentially, we can look into integrations of other augmentations packages that do not preserve gold standard knowledge. Good sources for inspiration are:
 
 - <https://github.com/KennethEnevoldsen/augmenty>
   - <https://kennethenevoldsen.github.io/augmenty/tutorials/introduction.html>
 - <https://github.com/QData/TextAttack>
 - <https://github.com/infinitylogesh/mutate>
 
-## Reporter
-
-Lowest priority, but it could be cool to be able to visualize this using `datapane` or other reporting tools.

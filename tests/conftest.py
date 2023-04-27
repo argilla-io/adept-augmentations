@@ -1,10 +1,13 @@
 from typing import List
-from datasets import ClassLabel, Sequence, load_dataset, Dataset
+
 import datasets
 import pytest
+import spacy
+from datasets import ClassLabel, Dataset, Sequence, load_dataset
+from spacy.tokens import DocBin
 from spacy.training import iob_to_biluo
 
-from tests.constants import CONLL_LABELS, BILOU_CONLL_LABELS
+from tests.constants import BILOU_CONLL_LABELS, CONLL_LABELS
 
 
 def pytest_sessionstart(session) -> None:
@@ -42,3 +45,18 @@ def fewnerd_coarse_tiny() -> Dataset:
 def fabner_tiny() -> Dataset:
     # a BIOES dataset
     return load_dataset("DFKI-SLT/fabner", split="train[:100]")
+
+
+@pytest.fixture(scope="session")
+def spacy_docbin() -> Dataset:
+    nlp = spacy.load("en_core_web_sm")
+
+    # Create some example training data
+    TRAIN_DATA = [
+        "Apple is looking at buying U.K. startup for $1 billion",
+        "Google is building a new self-driving car",
+        "Microsoft acquires GitHub for $7.5 billion",
+    ]
+    docs = nlp.pipe(TRAIN_DATA)
+
+    return DocBin(docs=docs)

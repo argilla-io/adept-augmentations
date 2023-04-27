@@ -1,4 +1,4 @@
-from .analyzers.analyzer import Analyzer
-from .augmenters.augmenter import Augmenter
+from adept_augmentations.analyzers.analyzer import Analyzer
+from adept_augmentations.augmenters import EntitySwapAugmenter
 
-__all__ = ["Analyzer", "Augmenter"]
+__all__ = ["Analyzer", "EntitySwapAugmenter"]

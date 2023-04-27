@@ -1,2 +1,3 @@
+from .augmenter import EntitySwapAugmenter
 
-from adept_augmentations.augmenters.augmenter import Augmenter
+__all__ = ["EntitySwapAugmenter"]
