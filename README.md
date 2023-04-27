@@ -5,6 +5,7 @@ A Python library aimed at adeptly augmenting NLP training data.
 ## Usage
 
 ### Datasets
+
 ```python
 from datasets import load_dataset
 
@@ -25,6 +26,7 @@ for entry in aug_dataset:
 ```
 
 ### spaCy
+
 ```python
 import spacy
 from spacy.tokens import DocBin

@@ -93,7 +93,7 @@ class EntitySwapAugmenter:
             self.extract_entities, input_columns=["tokens", label_column], load_from_cache_file=False
         )
 
-    def augment(self, N: int = 4, deduplicate: bool=True) -> Union[Dataset, DocBin]:
+    def augment(self, N: int = 4, deduplicate: bool = True) -> Union[Dataset, DocBin]:
         # TODO: Rename N, perhaps to "runs"?
         # N is the number of times we reuse every sentence
         augmented_dataset = self.dataset.map(
@@ -119,7 +119,7 @@ class EntitySwapAugmenter:
         return {"tokens": tokens, self.label_column: labels, "entities": entities}
 
     def replace_entities(
-        self, batch_tokens: List[str], batch_labels: List[int], batch_entities: List[Entity], N: int = 4, deduplicate: bool=False
+        self, batch_tokens: List[str], batch_labels: List[int], batch_entities: List[Entity], N: int = 4, deduplicate: bool = True
     ):
         # TODO: Convert labels correctly for IOB, etc.
         batch = {
