@@ -73,9 +73,7 @@ class EntitySwapAugmenter:
         self.dataset_type = type(dataset)
         if self.dataset_type == DocBin:
             dataset = convert_docbin_to_dataset(dataset, labels)
-        elif self.dataset_type == Dataset:
-            pass
-        else:
+        elif self.dataset_type != Dataset:
             raise TypeError("dataset must be either a `datasets.Dataset` or a `spacy.tokens.DocBin`.")
 
         self.dataset = dataset

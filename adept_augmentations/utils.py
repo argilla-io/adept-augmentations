@@ -82,6 +82,7 @@ def convert_dataset_to_docbin(dataset: Dataset) -> DocBin:
         return doc
 
     doc_bin = DocBin()
-    [doc_bin.add(get_doc_from_entry(entry["tokens"], entry["ner_tags"])) for entry in dataset]
+    for entry in dataset:
+        doc_bin.add(get_doc_from_entry(entry["tokens"], entry["ner_tags"]))
 
     return doc_bin
