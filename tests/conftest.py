@@ -49,6 +49,8 @@ def fabner_tiny() -> Dataset:
 
 @pytest.fixture(scope="session")
 def spacy_docbin() -> Dataset:
+    model = "en_core_web_sm"
+    spacy.cli.download(model)
     nlp = spacy.load("en_core_web_sm")
 
     # Create some example training data
