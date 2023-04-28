@@ -1,6 +1,4 @@
-
 from typing import Tuple
-
 
 Entity = Tuple[int, int, int]
 """

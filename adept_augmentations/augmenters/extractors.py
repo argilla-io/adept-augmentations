@@ -39,7 +39,8 @@ class EntityExtractorScheme(EntityExtractor):
 
         self.reduced_labels = ["O"] + sorted({label[2:] for label in self.labels if label != "O"})
         self.id2reduced_id = {
-            _id: self.reduced_labels.index(label[2:] if label != "O" else label) for _id, label in enumerate(self.labels)
+            _id: self.reduced_labels.index(label[2:] if label != "O" else label)
+            for _id, label in enumerate(self.labels)
         }
 
     def __call__(self, ner_tags: List[int]) -> Iterator[Entity]:
@@ -78,6 +79,7 @@ class EntityExtractorIOB(EntityExtractorScheme):
         label_ids = [self.labels.index(label_string) for label_string in labels]
         return label_ids
 
+
 class EntityExtractorBIOES(EntityExtractorScheme):
     def __init__(self, labels: List[str]) -> None:
         super().__init__(labels)
@@ -96,6 +98,7 @@ class EntityExtractorBIOES(EntityExtractorScheme):
         label_ids = [self.labels.index(label_string) for label_string in labels]
         return label_ids
 
+
 class EntityExtractorBILOU(EntityExtractorScheme):
     def __init__(self, labels: List[str]) -> None:
         super().__init__(labels)
@@ -113,6 +116,7 @@ class EntityExtractorBILOU(EntityExtractorScheme):
         # e.g. [3, 4, 5]
         label_ids = [self.labels.index(label_string) for label_string in labels]
         return label_ids
+
 
 class EntityExtractorNoScheme(EntityExtractor):
     def __init__(self, labels: List[str]) -> None:
@@ -135,6 +139,6 @@ class EntityExtractorNoScheme(EntityExtractor):
 
         if start_idx is not None:
             yield (entity_label_id, start_idx, idx)
-    
+
     def reduced_label_id_to_id(self, reduced_id: int, length: int) -> List[int]:
         return [reduced_id] * length

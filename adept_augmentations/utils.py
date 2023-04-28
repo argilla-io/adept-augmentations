@@ -3,7 +3,7 @@ from spacy.tokens import Doc, DocBin
 from spacy.vocab import Vocab
 
 
-def convert_docbin_to_dataset(doc_bin: DocBin, labels = None) -> Dataset:
+def convert_docbin_to_dataset(doc_bin: DocBin, labels=None) -> Dataset:
     """
     This function converts a spaCy DocBin object into a dataset, with optional labels.
 
@@ -28,14 +28,11 @@ def convert_docbin_to_dataset(doc_bin: DocBin, labels = None) -> Dataset:
     labels = ["O"] + list(labels)
     label2id = {label: i for i, label in enumerate(labels)}
     features = {
-        "tokens": Sequence(feature=Value(dtype='string')),
-        "ner_tags": Sequence(feature=ClassLabel(names=labels))
+        "tokens": Sequence(feature=Value(dtype="string")),
+        "ner_tags": Sequence(feature=ClassLabel(names=labels)),
     }
 
-    datasets_dict = {
-        "tokens": [],
-        "ner_tags": []
-    }
+    datasets_dict = {"tokens": [], "ner_tags": []}
     for doc in doc_bin.get_docs(vocab):
         datasets_dict["tokens"].append([token.text for token in doc])
         datasets_dict["ner_tags"].append([label2id.get(token.ent_type_, "O") for token in doc])
@@ -43,6 +40,7 @@ def convert_docbin_to_dataset(doc_bin: DocBin, labels = None) -> Dataset:
     converted_dataset = Dataset.from_dict(mapping=datasets_dict, features=Features(features))
 
     return converted_dataset
+
 
 def convert_dataset_to_docbin(dataset: Dataset) -> DocBin:
     vocab = Vocab()
@@ -70,12 +68,12 @@ def convert_dataset_to_docbin(dataset: Dataset) -> DocBin:
         biluo_labels = []
         prev_label = None
         for label in ner_tags:
-            if label != 'O':
+            if label != "O":
                 label = id2label[label]
                 if prev_label != label:
-                    biluo_labels.append('B-' + str(label))
+                    biluo_labels.append("B-" + str(label))
                 else:
-                    biluo_labels.append('I-' + str(label))
+                    biluo_labels.append("I-" + str(label))
             else:
                 biluo_labels.append(None)
             prev_label = label

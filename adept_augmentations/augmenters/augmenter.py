@@ -66,9 +66,10 @@ class LabelScheme(Enum):
         raise NotImplementedError(f"The detected labeling scheme with tags {tags!r} has not been implemented.")
 
 
-
 class EntitySwapAugmenter:
-    def __init__(self, dataset: Union[Dataset, DocBin], labels: Optional[List[str]] = None, label_column: str = "ner_tags") -> None:
+    def __init__(
+        self, dataset: Union[Dataset, DocBin], labels: Optional[List[str]] = None, label_column: str = "ner_tags"
+    ) -> None:
         self.dataset_type = type(dataset)
         if self.dataset_type == DocBin:
             dataset = convert_docbin_to_dataset(dataset, labels)
@@ -119,7 +120,12 @@ class EntitySwapAugmenter:
         return {"tokens": tokens, self.label_column: labels, "entities": entities}
 
     def replace_entities(
-        self, batch_tokens: List[str], batch_labels: List[int], batch_entities: List[Entity], N: int = 4, deduplicate: bool = True
+        self,
+        batch_tokens: List[str],
+        batch_labels: List[int],
+        batch_entities: List[Entity],
+        N: int = 4,
+        deduplicate: bool = True,
     ):
         # TODO: Convert labels correctly for IOB, etc.
         batch = {
@@ -138,8 +144,8 @@ class EntitySwapAugmenter:
                 * using the random.choice we can replace a random one.
                 """
                 for label, start, end in entities[::-1]:
-                # if entities:
-                #     label, start, end = random.choice(entities)
+                    # if entities:
+                    #     label, start, end = random.choice(entities)
                     entity_tokens = random.choice(tuple(self.knowledge_base[label]))
                     tokens_copy[start:end] = entity_tokens
                     labels_copy[start:end] = self.entity_extractor.reduced_label_id_to_id(label, len(entity_tokens))
