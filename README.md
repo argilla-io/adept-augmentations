@@ -11,18 +11,18 @@ from datasets import load_dataset
 
 from adept_augmentations import EntitySwapAugmenter
 
-dataset = load_dataset("conll2003", split="train[:3]"])
+dataset = load_dataset("conll2003", split="train[:3]")
 augmenter = EntitySwapAugmenter(dataset)
 aug_dataset = augmenter.augment(N=4)
 
-for entry in aug_dataset:
-    print(" ".join(entry["token"]))
+for entry in aug_dataset["tokens"]:
+    print(entry)
 
-# EU rejects German call to boycott British lamb .
-# EU rejects British call to boycott German lamb .
-# EU rejects German call to boycott German lamb .
-# Peter Blackburn
-# BRUSSELS 1996-08-22
+# ['EU', 'rejects', 'British', 'call', 'to', 'boycott', 'British', 'lamb', '.']
+# ['EU', 'rejects', 'German', 'call', 'to', 'boycott', 'German', 'lamb', '.']
+# ['EU', 'rejects', 'German', 'call', 'to', 'boycott', 'British', 'lamb', '.']
+# ['Peter', 'Blackburn']
+# ['BRUSSELS', '1996-08-22']
 ```
 
 ### spaCy
@@ -59,14 +59,12 @@ for doc in doc_bin.get_docs(nlp.vocab):
 # GitHub acquires GitHub for $ 1 billion
 ```
 
-## Augmenter
-
-We believe that we can
+## Implemented Augmenters
 
 - [X] `EntitySwapAugmenter`
-- [] `KnowledgeBaseSwapAugmenter`
-- [] `CoreferenceSwapAugmenter`
-- [] `SyntaticTreeSwapAugmenter`
+- [ ] `KnowledgeBaseSwapAugmenter`
+- [ ] `CoreferenceSwapAugmenter`
+- [ ] `SyntaticTreeSwapAugmenter`
 
 ## Potential integrations
 
