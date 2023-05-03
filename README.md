@@ -1,4 +1,4 @@
-# adept-augmentations
+# Adept Augmentations
 
 A Python library aimed at adeptly augmenting NLP training data.
 
