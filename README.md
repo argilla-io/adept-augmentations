@@ -59,6 +59,39 @@ for doc in doc_bin.get_docs(nlp.vocab):
 # GitHub acquires GitHub for $ 1 billion
 ```
 
+## Potential performance gains
+Data augmentation can significantly improve model performance in low-data scenarios.
+To showcase this, we trained a [SpanMarker](https://github.com/tomaarsen/SpanMarkerNER) NER model on
+the 50, 100, 200, 400 and 800 first [CoNLL03](https://huggingface.co/datasets/conll2003) training samples.
+
+The augmented dataset is generated like so:
+```python
+# Select N (50, 100, 200, 400 or 800) samples from the gold training dataset
+train_dataset = dataset["train"].select(range(N))
+
+# Generate augmented dataset, with 4 * N samples
+augmented_dataset = Augmenter(train_dataset).augment(N=4)
+
+# Combine the original with the augmented to produce the full dataset
+# to produce a dataset 5 times as big as the original
+train_dataset = concatenate_datasets([augmented_dataset, train_dataset])
+```
+
+Note that the baseline uses 5 epochs. This way, the training time and steps are identical between the two experiments. All scenarios are executed 5 times,
+and we report means and standard errors.
+
+|       | Original - 5 Epochs | Augmented - 1 Epoch |
+|-------|--|--|
+| N=50  | 0.387 ± 0.042 F1 | **0.484 ± 0.054 F1** |
+| N=100 | 0.585 ± 0.070 F1 | **0.663 ± 0.038 F1** |
+| N=200 | 0.717 ± 0.053 F1 | **0.757 ± 0.025 F1** |
+| N=400 | 0.816 ± 0.017 F1 | **0.826 ± 0.011 F1** |
+| N=800 | 0.859 ± 0.004 F1 | **0.862 ± 0.002 F1** |
+
+(Note: These results are not optimized and do not indicate maximum performances with SpanMarker.)
+
+From these results, it is clear that performing data augmentation using `adept_augmentations` can heavily improve performance in low-data settings.
+
 ## Implemented Augmenters
 
 - [X] `EntitySwapAugmenter`
