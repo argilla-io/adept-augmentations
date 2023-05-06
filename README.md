@@ -1,6 +1,8 @@
 # Adept Augmentations
 
-A Python library aimed at adeptly augmenting NLP training data.
+Welcome to Adept Augmentation, the ultimate solution for those struggling with few shot Named Entity Recognition (NER) tasks!
+
+Adept Augmentation is a Python package that provides data augmentation functionalities for NER training data using the `spacy` and `datasets` packages. With Adept Augmentation, you can easily generate more labeled data for your few shot NER task and improve your model performance.
 
 ## Usage
 
