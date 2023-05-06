@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "adept-augmentations"
-version = "0.1.0"
+version = "0.1.1"
 description = "A Python library aimed at adeptly, augmenting NLP training data."
 authors = ["david <david.m.berenstein@gmail.com>"]
 license = "Apache"
