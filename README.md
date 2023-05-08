@@ -4,6 +4,8 @@ Welcome to Adept Augmentation, the ultimate solution for those struggling with f
 
 Adept Augmentation is a Python package that provides data augmentation functionalities for NER training data using the `spacy` and `datasets` packages. With Adept Augmentation, you can easily generate more labeled data for your few shot NER task and improve your model performance.
 
+Adept Augmentation works for NER labels using the IOB, IOB2, BIOES and BILUO tagging schemes, as well as labels not following any tagging scheme.
+
 ## Usage
 
 ### Datasets
