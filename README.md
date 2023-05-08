@@ -8,6 +8,8 @@ Adept Augmentation is a Python package that provides data augmentation functiona
 
 For example, assuming that we have knowledge base for PERSONS and LOCATIONS and PRODUCTS. We can then create additional data for the sentence "Momofuko Ando created instant noodles in Osaka." using `augmenter.augment(N=2)`, resulting in "David created instant noodles in Madrid." or "Tom created Adept Augmentations in the Netherlands".
 
+Adept Augmentation works for NER labels using the IOB, IOB2, BIOES and BILUO tagging schemes, as well as labels not following any tagging scheme.
+
 ## Usage
 
 ### Datasets
