@@ -53,6 +53,7 @@ docs = nlp.pipe(TRAIN_DATA)
 # Create a new DocBin
 doc_bin = DocBin(docs=docs)
 
+# Augment Data
 doc_bin = EntitySwapAugmenter(doc_bin).augment(4)
 for doc in doc_bin.get_docs(nlp.vocab):
     print(doc.text)
@@ -115,3 +116,8 @@ Potentially, we can look into integrations of other augmentations packages that 
   - <https://kennethenevoldsen.github.io/augmenty/tutorials/introduction.html>
 - <https://github.com/QData/TextAttack>
 - <https://github.com/infinitylogesh/mutate>
+
+## Logo Attribution
+
+Augmented Reality by KΛPKLΛM from <a href="https://thenounproject.com/browse/icons/term/augmented-reality/" target="_blank" title="Augmented Reality Icons">Noun Project</a>
+
