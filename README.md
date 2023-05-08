@@ -10,8 +10,6 @@ For example, assuming that we have knowledge base for `PERSONS`, `LOCATIONS` and
 
 Adept Augmentation works for NER labels using the IOB, IOB2, BIOES and BILUO tagging schemes, as well as labels not following any tagging scheme.
 
-Adept Augmentation works for NER labels using the IOB, IOB2, BIOES and BILUO tagging schemes, as well as labels not following any tagging scheme.
-
 ## Usage
 
 ### Datasets
