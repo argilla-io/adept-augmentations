@@ -1,6 +1,6 @@
 # Adept Augmentations
 
-Welcome to Adept Augmentations, can be used for creating additional data in Few Shot Named Entity Recognition (NER) setting!
+Welcome to Adept Augmentations, which can be used for creating additional data in Few Shot Named Entity Recognition (NER) settings!
 
 Adept Augmentation is a Python package that provides data augmentation functionalities for NER training data using the `spacy` and `datasets` packages. Currently, we support one augmentor `EntitySwapAugmenter`, however, we plan on [adding some more](#implemented-augmenters).
 
