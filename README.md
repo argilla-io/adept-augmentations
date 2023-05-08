@@ -2,7 +2,7 @@
 
 Welcome to Adept Augmentations, can be used for creating additional data in Few Shot Named Entity Recognition (NER) setting!
 
-Adept Augmentation is a Python package that provides data augmentation functionalities for NER training data using the `spacy` and `datasets` packages. Currently, we support one augmentor `EntitySwapAugmenter`, however, we plan on adding more.
+Adept Augmentation is a Python package that provides data augmentation functionalities for NER training data using the `spacy` and `datasets` packages. Currently, we support one augmentor `EntitySwapAugmenter`, however, we plan on [adding some more](#implemented-augmenters).
 
 `EntitySwapAugmenter` takes either a `datasets.Dataset` or a `spacy.tokens.DocBin`. Additionally, it is optional to provide a set of `labels` to be included in the augmentations. It initially created a knowledge base of entities belonging to a certain label. When running `augmenter.augment()` for `N` runs, it then creates `N` new sentences with random swaps of the original entities with an entity of the same corresponding label from the knowledge base.
 
