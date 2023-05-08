@@ -6,7 +6,7 @@ Adept Augmentation is a Python package that provides data augmentation functiona
 
 `EntitySwapAugmenter` takes either a `datasets.Dataset` or a `spacy.tokens.DocBin`. Additionally, it is optional to provide a set of `labels`. It initially creates a knowledge base of entities belonging to a certain label. When running `augmenter.augment()` for `N` runs, it then creates `N` new sentences with random swaps of the original entities with an entity of the same corresponding label from the knowledge base.
 
-For example, assuming that we have knowledge base for PERSONS and LOCATIONS and PRODUCTS. We can then create additional data for the sentence "Momofuko Ando created instant noodles in Osaka." using `augmenter.augment(N=2)`, resulting in "David created instant noodles in Madrid." or "Tom created Adept Augmentations in the Netherlands".
+For example, assuming that we have knowledge base for `PERSONS`, `LOCATIONS` and `PRODUCTS`. We can then create additional data for the sentence "Momofuko Ando created instant noodles in Osaka." using `augmenter.augment(N=2)`, resulting in "David created instant noodles in Madrid." or "Tom created Adept Augmentations in the Netherlands".
 
 Adept Augmentation works for NER labels using the IOB, IOB2, BIOES and BILUO tagging schemes, as well as labels not following any tagging scheme.
 
