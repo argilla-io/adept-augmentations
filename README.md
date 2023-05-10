@@ -15,15 +15,14 @@ Adept Augmentation works for NER labels using the IOB, IOB2, BIOES and BILUO tag
 ### Datasets
 
 ```python
+from adept_augmentations import EntitySwapAugmenter
 from datasets import load_dataset
 
-from adept_augmentations import EntitySwapAugmenter
+golden_dataset = load_dataset("conll2003", split="train[:3]")
+augmenter = EntitySwapAugmenter(golden_dataset)
+augmented_dataset = augmenter.augment(N=4)
 
-dataset = load_dataset("conll2003", split="train[:3]")
-augmenter = EntitySwapAugmenter(dataset)
-aug_dataset = augmenter.augment(N=4)
-
-for entry in aug_dataset["tokens"]:
+for entry in augmented_dataset["tokens"]:
     print(entry)
 
 # ['EU', 'rejects', 'British', 'call', 'to', 'boycott', 'British', 'lamb', '.']
@@ -36,36 +35,31 @@ for entry in aug_dataset["tokens"]:
 ### spaCy
 
 ```python
-import spacy
-from spacy.tokens import DocBin
-
 from adept_augmentations import EntitySwapAugmenter
+import spacy
+from spacy.tokens import Doc, DocBin
 
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.blank("en")
 
-# Create some example training data
-TRAIN_DATA = [
-    "Apple is looking at buying U.K. startup for $1 billion",
-    "Microsoft acquires GitHub for $7.5 billion",
+# Create some example golden data
+example_data = [
+    ("Apple is looking at buying U.K. startup for $1 billion", [(0, 5, "ORG"), (27, 31, "LOC"), (44, 54, "MONEY")]),
+    ("Microsoft acquires GitHub for $7.5 billion", [(0, 9, "ORG"), (19, 25, "ORG"), (30, 42, "MONEY")]),
 ]
-docs = nlp.pipe(TRAIN_DATA)
 
 # Create a new DocBin
-doc_bin = DocBin(docs=docs)
+nlp = spacy.blank("en")
+docs = []
+for entry in example_data:
+    doc = Doc(nlp.vocab, words=entry[0].split())
+    doc.ents = [doc.char_span(ent[0], ent[1], label=ent[2]) for ent in entry[1]]
+    docs.append(doc)
+golden_dataset = DocBin(docs=docs)
 
 # Augment Data
-doc_bin = EntitySwapAugmenter(doc_bin).augment(4)
-for doc in doc_bin.get_docs(nlp.vocab):
+augmented_dataset = EntitySwapAugmenter(golden_dataset).augment(4)
+for doc in augmented_dataset.get_docs(nlp.vocab):
     print(doc.text)
-
-# GitHub is looking at buying U.K. startup for $ 7.5 billion
-# Microsoft is looking at buying U.K. startup for $ 1 billion
-# Microsoft is looking at buying U.K. startup for $ 7.5 billion
-# GitHub is looking at buying U.K. startup for $ 1 billion
-# Microsoft acquires Apple for $ 7.5 billion
-# Apple acquires Microsoft for $ 1 billion
-# Microsoft acquires Microsoft for $ 7.5 billion
-# GitHub acquires GitHub for $ 1 billion
 ```
 
 ## Potential performance gains
@@ -76,14 +70,14 @@ the 50, 100, 200, 400 and 800 first [CoNLL03](https://huggingface.co/datasets/co
 The augmented dataset is generated like so:
 ```python
 # Select N (50, 100, 200, 400 or 800) samples from the gold training dataset
-train_dataset = dataset["train"].select(range(N))
+golden_dataset = dataset["train"].select(range(N))
 
 # Generate augmented dataset, with 4 * N samples
-augmented_dataset = Augmenter(train_dataset).augment(N=4)
+augmented_dataset = Augmenter(golden_dataset).augment(N=4)
 
 # Combine the original with the augmented to produce the full dataset
 # to produce a dataset 5 times as big as the original
-train_dataset = concatenate_datasets([augmented_dataset, train_dataset])
+augmented_dataset = concatenate_datasets([augmented_dataset, golden_dataset])
 ```
 
 Note that the baseline uses 5 epochs. This way, the training time and steps are identical between the two experiments. All scenarios are executed 5 times,
