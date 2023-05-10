@@ -106,7 +106,7 @@ From these results, it is clear that performing data augmentation using `adept_a
 - [X] `EntitySwapAugmenter`
 - [ ] `KnowledgeBaseSwapAugmenter`
 - [ ] `CoreferenceSwapAugmenter`
-- [ ] `SyntaticTreeSwapAugmenter`
+- [ ] `SentenceCropAugmenter`
 
 ## Potential integrations
 
