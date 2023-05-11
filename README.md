@@ -60,6 +60,15 @@ golden_dataset = DocBin(docs=docs)
 augmented_dataset = EntitySwapAugmenter(golden_dataset).augment(4)
 for doc in augmented_dataset.get_docs(nlp.vocab):
     print(doc.text)
+    
+# GitHub is looking at buying U.K. startup for $ 7.5 billion
+# Microsoft is looking at buying U.K. startup for $ 1 billion
+# Microsoft is looking at buying U.K. startup for $ 7.5 billion
+# GitHub is looking at buying U.K. startup for $ 1 billion
+# Microsoft acquires Apple for $ 7.5 billion
+# Apple acquires Microsoft for $ 1 billion
+# Microsoft acquires Microsoft for $ 7.5 billion
+# GitHub acquires GitHub for $ 1 billion
 ```
 
 ## Potential performance gains
